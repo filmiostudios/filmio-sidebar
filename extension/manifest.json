@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Filmio AI Sidebar",
+  "version": "0.1.0",
+  "description": "MiniMe AI assistant for Google Docs — grounded in the Filmio knowledge base.",
+
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "identity"
+  ],
+
+  "host_permissions": [
+    "https://docs.google.com/*",
+    "https://oc.filmio.cloud/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://docs.google.com/document/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+
+  "action": {
+    "default_title": "Open MiniMe sidebar"
+  },
+
+  "oauth2": {
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
