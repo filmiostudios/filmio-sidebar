@@ -137,6 +137,7 @@ Suggested: "Summarize this doc"
 - Mobile / Safari — Chrome-specific APIs, not feasible
 - Voice input — future
 - General web AI (this is Docs + Filmio KB only)
+- Modes / Gems (Ask / Edit / Write / Explore) — deferred until real usage patterns emerge from v0.1–v0.2; query classifier runs invisibly under the hood
 
 ---
 
@@ -144,8 +145,9 @@ Suggested: "Summarize this doc"
 
 **v0.1 (now):** Core chat, KB search, streaming, auth, persistence  
 **v0.2:** Inline edits ("Apply to doc" button), full team rollout  
-**v0.3:** Conversation history browser, suggested prompts based on doc status  
+**v0.3:** Conversation history browser (named threads per doc)  
 **v0.4:** Multi-doc context, compare two docs  
+**v0.5+:** Modes/Gems concept (data-driven, after real usage patterns emerge)  
 **Future (BClaw):** Standalone web app with same backend, broader workflows
 
 ---
