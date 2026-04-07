@@ -298,3 +298,23 @@ Before calling v0.1 done:
 - Backend: `filmiostudios/infrastructure/scripts/comment_router.py`
 - KB backend: `filmiostudios/infrastructure/scripts/kb_search_vertex.py`
 - OC endpoint docs: `filmio/docs/team-agent-doc-integration-spec.md`
+
+---
+
+## Loading / Thinking State
+
+While OC is processing (between Send and first streaming token):
+
+```
+[MiniMe icon]  ● ● ●
+```
+
+- Three-dot pulse appears **immediately** on Send (< 100ms) — user sees their message was received
+- First token arriving **replaces dots** with streaming text (no flicker, no layout shift)
+- **Stop** button active during entire thinking + streaming window
+- If no first token within **8 seconds** → add "Taking longer than usual..." below dots (don't replace them — request is still in flight)
+- On failure → replace dots with error state in muted red: "Something went wrong. Try again →"
+
+This matters: SSE to OC has 2–4s of silence before first token (KB search + query classifier run before generation starts). The dots bridge that gap so it never feels broken.
+
+**Implementation note:** `Chat.tsx` manages an `isThinking: boolean` state flag. Set to `true` on Send, `false` on first chunk received. Render `<ThinkingIndicator />` when `isThinking && !currentStreamText`.
