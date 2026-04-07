@@ -172,3 +172,37 @@ Our sidebar is a **Filmio-domain expert** that:
 - Generates context-aware suggestions
 
 The Gemini sidebar is a good reference for UX patterns. It is not a competitor for what we're building.
+
+---
+
+## Key Screenshot: The Full-Dump UX Failure
+
+*Screenshot captured 2026-04-07 — Gemini response to "add Email #9 to the sequence"*
+
+This screenshot is the clearest illustration of why we're building the Filmio sidebar.
+
+**What Gemini did:**
+- Took the user's "yes" as confirmation to incorporate Email #9
+- Rewrote the **entire email sequence** (all 9 emails)
+- Dumped the full output as a **monospaced code block** in the panel
+- Included our Filmio header table as raw pipe-delimited garbage (`| **Status** *(Do Not Edit)* | WIP - Department`) — zero understanding of what it is
+- Left the user with a scrollable wall of text and no way to apply it
+
+**What the user now has to do:**
+1. Scroll through the entire panel to verify the output
+2. Manually select all the text in the code block
+3. Copy it
+4. Go back to the Google Doc
+5. Select and delete the old content
+6. Paste the new content
+7. Reformat anything that got mangled
+
+**What we do instead (v0.1 → v0.2):**
+- v0.1: Insert button applies the response at cursor with formatting preserved — no code block, no monospace dump
+- v0.2: Diff view shows exactly what changed (Email #9 added at end), Accept applies only the delta — nothing else touches the doc
+
+**Additional finding from screenshot:**
+- No Insert button visible in the response state — it may only appear for certain response types, or may require scrolling to the bottom. Either way, even when available, it inserts the full response verbatim — which in this case would dump 3,000 words of monospaced text at the cursor position.
+- The Filmio header table being included in the output confirms Gemini has no awareness of structured doc metadata — it treats everything as flat content. Our sidebar will skip the header table (we already parse it separately for status/owner/dept context).
+
+**Design rule established:** Never ask the user to "copy back into your Google Doc." That phrase should never appear in our sidebar.
