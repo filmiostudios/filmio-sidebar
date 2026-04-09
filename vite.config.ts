@@ -1,35 +1,27 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { copyFileSync, mkdirSync, existsSync, readdirSync, renameSync } from 'fs';
+import { copyFileSync, mkdirSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 
-// Plugin to copy extension/ static assets to dist/ and fix HTML location
+// Plugin to copy static extension assets into dist/ after build
 function copyExtensionAssets() {
   return {
     name: 'copy-extension-assets',
     closeBundle() {
       // Copy manifest.json
       copyFileSync('extension/manifest.json', 'dist/manifest.json');
+      console.log('✅ Copied manifest.json');
 
-      // Vite outputs sidebar.html as dist/extension/sidebar.html — move to dist/sidebar.html
-      const wrongPath = 'dist/extension/sidebar.html';
-      const rightPath = 'dist/sidebar.html';
-      if (existsSync(wrongPath)) {
-        renameSync(wrongPath, rightPath);
-        console.log('✅ Moved extension/sidebar.html → dist/sidebar.html');
-      }
-
-      // Copy icons if they exist
+      // Copy icons
       const iconsDir = 'extension/icons';
       if (existsSync(iconsDir)) {
         mkdirSync('dist/icons', { recursive: true });
         for (const file of readdirSync(iconsDir)) {
           copyFileSync(join(iconsDir, file), join('dist/icons', file));
         }
+        console.log('✅ Copied icons/');
       }
-
-      console.log('✅ Copied manifest.json to dist/');
     },
   };
 }
@@ -41,12 +33,14 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
+        // sidebar.html at project root — Vite rewrites script tags and outputs as dist/sidebar.html
+        sidebar: resolve(__dirname, 'sidebar.html'),
         background: resolve(__dirname, 'src/background/index.ts'),
         content: resolve(__dirname, 'src/content/index.ts'),
-        sidebar: resolve(__dirname, 'extension/sidebar.html'),
       },
       output: {
         entryFileNames: (chunk) => {
+          // background.js and content.js must be at dist/ root
           if (['background', 'content'].includes(chunk.name)) {
             return '[name].js';
           }
