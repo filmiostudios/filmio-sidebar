@@ -1,16 +1,24 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { copyFileSync, mkdirSync, existsSync, readdirSync } from 'fs';
+import { copyFileSync, mkdirSync, existsSync, readdirSync, renameSync } from 'fs';
 import { join } from 'path';
 
-// Plugin to copy extension/ static assets to dist/
+// Plugin to copy extension/ static assets to dist/ and fix HTML location
 function copyExtensionAssets() {
   return {
     name: 'copy-extension-assets',
     closeBundle() {
       // Copy manifest.json
       copyFileSync('extension/manifest.json', 'dist/manifest.json');
+
+      // Vite outputs sidebar.html as dist/extension/sidebar.html — move to dist/sidebar.html
+      const wrongPath = 'dist/extension/sidebar.html';
+      const rightPath = 'dist/sidebar.html';
+      if (existsSync(wrongPath)) {
+        renameSync(wrongPath, rightPath);
+        console.log('✅ Moved extension/sidebar.html → dist/sidebar.html');
+      }
 
       // Copy icons if they exist
       const iconsDir = 'extension/icons';
@@ -21,7 +29,7 @@ function copyExtensionAssets() {
         }
       }
 
-      console.log('✅ Copied manifest.json and icons to dist/');
+      console.log('✅ Copied manifest.json to dist/');
     },
   };
 }
