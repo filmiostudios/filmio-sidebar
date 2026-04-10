@@ -37,6 +37,10 @@ export const PANEL_SIZES = {
   full: '50%',
 } as const;
 
+// Google OAuth — Chrome Extension client (registered 2026-04-10)
+// Extension ID: gejiddohjgogedgjnonbofjigllpkmbf
+export const GOOGLE_CLIENT_ID = '93431059074-mmtuoag0e5h8de26kirhmkte03og4e3p.apps.googleusercontent.com';
+
 // Filmio brand color
 export const BRAND_ORANGE = '#FF633D';
 
