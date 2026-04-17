@@ -1,5 +1,5 @@
 // Backend endpoints
-export const OC_BASE_URL = 'https://oc.filmio.cloud';
+export const OC_BASE_URL = 'https://5.78.187.237';
 export const OC_HOOK_ENDPOINT = `${OC_BASE_URL}/hooks/agent`;
 export const OC_HEALTH_ENDPOINT = `${OC_BASE_URL}/health`;
 
